@@ -13,7 +13,7 @@ public class Util {
 
     public static Connection getConnection () throws SQLException {
 
-        Driver driver = new com.mysql.jdbc.Driver();
+        Driver driver = new com.mysql.cj.jdbc.Driver();
         DriverManager.registerDriver(driver);
 
         return DriverManager.getConnection(URL, USERNAME, PASSWORD);
