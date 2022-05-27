@@ -38,7 +38,7 @@ public class UserDaoJDBCImpl implements UserDao {
     }
     // Добавление User в таблицу
     public void saveUser(String name, String lastName, byte age) throws SQLException {
-
+        conn.setAutoCommit(false);
         try (PreparedStatement pstm = conn.prepareStatement("INSERT INTO users (name, last_name, age) VALUES (?, ?, ?)")) {
             pstm.setString(1, name);
             pstm.setString(2, lastName);
@@ -46,6 +46,7 @@ public class UserDaoJDBCImpl implements UserDao {
             pstm.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
+            conn.rollback();
         }
 
     }
@@ -57,8 +58,8 @@ public class UserDaoJDBCImpl implements UserDao {
             pstm.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
+            conn.rollback();
         }
-        conn.rollback();
     }
     // Получение всех User(ов) из таблицы
     public List<User> getAllUsers() {
