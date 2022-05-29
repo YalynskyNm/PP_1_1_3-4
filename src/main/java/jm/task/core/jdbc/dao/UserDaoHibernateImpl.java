@@ -12,10 +12,13 @@ import java.util.List;
 public class UserDaoHibernateImpl implements UserDao {
     private final SessionFactory sessionFactory = Util.getSessionFactory();
 
+    private Session session;
+    private Transaction transaction;
 
     public UserDaoHibernateImpl() {
 
     }
+
     @Override
     public void createUsersTable() {
         try (Session session = sessionFactory.openSession()) {
@@ -31,8 +34,10 @@ public class UserDaoHibernateImpl implements UserDao {
             System.out.println("Таблица создана");
         } catch (Exception e) {
             e.printStackTrace();
+
         }
     }
+
 
     @Override
     public void dropUsersTable() {
@@ -41,6 +46,7 @@ public class UserDaoHibernateImpl implements UserDao {
             session.createSQLQuery("Drop table if exists User")
                     .executeUpdate();
             transaction.commit();
+            System.out.println("Таблица удалена");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -55,6 +61,9 @@ public class UserDaoHibernateImpl implements UserDao {
             System.out.println("User с именем – " + name + " добавлен в базу данных");
         } catch (Exception e) {
             e.printStackTrace();
+            if (transaction != null) {
+                transaction.rollback();
+            }
         }
     }
 
@@ -67,6 +76,9 @@ public class UserDaoHibernateImpl implements UserDao {
             System.out.println("User удален");
         } catch (Exception e) {
             e.printStackTrace();
+            if (transaction != null) {
+                transaction.rollback();
+            }
         }
     }
 
@@ -75,10 +87,12 @@ public class UserDaoHibernateImpl implements UserDao {
         List<User> users = new ArrayList<>();
         try (Session session = sessionFactory.openSession()) {
             Transaction transaction = session.beginTransaction();
+            users = session.createQuery(String.valueOf(User.class)).list();
             users = session.createQuery("FROM User").list();
             transaction.commit();
         } catch (Exception e) {
             e.printStackTrace();
+
         }
         return users;
     }
@@ -95,3 +109,4 @@ public class UserDaoHibernateImpl implements UserDao {
         }
     }
 }
+
