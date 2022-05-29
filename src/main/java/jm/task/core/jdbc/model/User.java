@@ -2,6 +2,7 @@ package jm.task.core.jdbc.model;
 
 import javax.persistence.*;
 
+@Entity
 @Table
 public class User {
     @Id
@@ -16,6 +17,10 @@ public class User {
 
     @Column
     private Byte age;
+
+    public User() {
+
+    }
 
     public User(String name, String lastName, Byte age) {
         this.name = name;
@@ -57,7 +62,8 @@ public class User {
 
     @Override
     public String toString() {
-        return String.format("User {id = '%s', name = '%s', lastName = '%s', age = '%d'}", getId(), getName(), getLastName(), getAge());
+        //return String.format("User {id = '%s', name = '%s', lastName = '%s', age = '%d'}", getId(), getName(), getLastName(), getAge());
+        return "User{" + "id=" + id + ", name='" + name + '\'' + ", lastName='" + lastName + '\'' + ", age=" + age + '}';
     }
 
     @Override
@@ -70,3 +76,4 @@ public class User {
         return super.equals(obj);
     }
 }
+
